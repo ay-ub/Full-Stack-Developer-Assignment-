@@ -4,6 +4,7 @@ import { create } from "zustand";
 type Store = {
   items: ItemType[];
   selectedItem: ItemType | null;
+  isLoading: boolean;
 
   createItem: (item: Omit<ItemType, "id">) => Promise<void>;
   deleteItem: (id: string) => Promise<void>;
@@ -18,6 +19,7 @@ const SLEEPDURATION = 500;
 const useItemsStore = create<Store>()((set) => ({
   items: [],
   selectedItem: null,
+  isLoading: false,
 
   createItem: async (item: Omit<ItemType, "id">) => {
     try {
@@ -77,8 +79,8 @@ const useItemsStore = create<Store>()((set) => ({
   },
   fetchItems: async () => {
     try {
+      set({ isLoading: true });
       const response = await fetch(`${API_BASE_URL}/items`);
-
       if (!response.ok) {
         throw new Error("Failed to fetch items");
       }
@@ -87,6 +89,8 @@ const useItemsStore = create<Store>()((set) => ({
       set({ items });
     } catch (error) {
       console.error("Failed to fetch items:", error);
+    } finally {
+      set({ isLoading: false });
     }
   },
 }));

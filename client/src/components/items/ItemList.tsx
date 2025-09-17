@@ -14,8 +14,10 @@ import {
 } from "@dnd-kit/sortable";
 import DragbleItem from "./Dragble";
 import useItemsStore from "@/store/itemsStore";
+import { Loader } from "lucide-react";
 function ItemList() {
   const itemsData = useItemsStore((state) => state.items);
+  const isLoading = useItemsStore((state) => state.isLoading);
 
   const [items, setItems] = useState(itemsData);
   const handleDragEnd = (event: DragEndEvent) => {
@@ -39,11 +41,11 @@ function ItemList() {
   const fetchItems = useItemsStore((state) => state.fetchItems);
   useEffect(() => {
     setItems(itemsData);
-    if (itemsData.length === 0) {
-      fetchItems();
-    }
   }, [itemsData]);
 
+  useEffect(() => {
+    fetchItems();
+  }, [fetchItems]);
   return (
     <DndContext
       collisionDetection={closestCenter}
@@ -58,7 +60,11 @@ function ItemList() {
           id="item-list"
           className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 overflow-hidden items-stretch"
         >
-          {items.length > 0 ? (
+          {isLoading ? (
+            <div className="col-span-3 flex justify-center items-center">
+              <Loader className="animate-spin" />
+            </div>
+          ) : items.length > 0 ? (
             items.map((item) => <DragbleItem key={item.id} itemData={item} />)
           ) : (
             <p className="text-center text-gray-500 col-span-full h-30">

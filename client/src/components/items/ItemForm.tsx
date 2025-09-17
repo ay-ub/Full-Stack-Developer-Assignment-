@@ -10,6 +10,7 @@ import { useState } from "react";
 import type { ItemType } from "@/types/item";
 import useItemsStore from "@/store/itemsStore";
 import Notify from "@/lib/Toast";
+import { toast } from "sonner";
 
 type Inputs = {
   name: string;
@@ -34,7 +35,9 @@ function ItemForm({ item }: { item?: ItemType }) {
 
   const handleSubmitForm: SubmitHandler<Inputs> = (data) => {
     if (!date) {
-      alert("Please select a date");
+      toast.error("Please select a date", {
+        icon: "❌",
+      });
       return;
     }
     const expiryDate = date.toISOString();
