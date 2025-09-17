@@ -55,9 +55,13 @@ function ItemList() {
           id="item-list"
           className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 overflow-hidden items-stretch"
         >
-          {items.map((item) => (
-            <DragbleItem key={item.id} itemData={item} />
-          ))}
+          {items.length > 0 ? (
+            items.map((item) => <DragbleItem key={item.id} itemData={item} />)
+          ) : (
+            <p className="text-center text-gray-500 col-span-full h-30">
+              No items available
+            </p>
+          )}
         </div>
       </SortableContext>
     </DndContext>
