@@ -6,4 +6,4 @@ export type ItemType = {
   expiryDate: string;
 };
 
-export type NewItemType = Omit<ItemType, "id" | "createdAt">;
+export type NewItemType = Omit<ItemType, "id">;
