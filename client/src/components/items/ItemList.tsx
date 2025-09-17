@@ -14,7 +14,7 @@ import {
 } from "@dnd-kit/sortable";
 import DragbleItem from "./Dragble";
 import useItemsStore from "@/store/itemsStore";
-import { Loader } from "lucide-react";
+import Loading from "../Loading";
 function ItemList() {
   const itemsData = useItemsStore((state) => state.items);
   const isLoading = useItemsStore((state) => state.isLoading);
@@ -61,9 +61,7 @@ function ItemList() {
           className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 overflow-hidden items-stretch"
         >
           {isLoading ? (
-            <div className="col-span-3 flex justify-center items-center">
-              <Loader className="animate-spin" />
-            </div>
+            <Loading className="col-span-3 min-h-20" />
           ) : items.length > 0 ? (
             items.map((item) => <DragbleItem key={item.id} itemData={item} />)
           ) : (
