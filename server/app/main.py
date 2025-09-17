@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import item_routes
+
 from app.database import Base, engine
 
 
@@ -20,9 +20,12 @@ app.add_middleware(
 
 Base.metadata.create_all(bind=engine)
 
+from app.routes import item_routes
 app.include_router(item_routes.router)
 
+from app.routes import upload_routes
+app.include_router(upload_routes.router)
 
 @app.get("/")
 def read_root():
-    return {"message": "Hello FastAPI 🚀"}
+    return {"message": "Hello World"}
