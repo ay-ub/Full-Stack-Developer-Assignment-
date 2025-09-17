@@ -1,6 +1,6 @@
+import { API_BASE_URL } from "@/config/appConfig";
 import type { ItemType } from "@/types/item";
 import { create } from "zustand";
-import itemsData from "@/constants/items";
 type Store = {
   items: ItemType[];
   selectedItem: ItemType | null;
@@ -13,39 +13,40 @@ type Store = {
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+const SLEEPDURATION = 500;
 const useItemsStore = create<Store>()((set) => ({
-  items: itemsData,
+  items: [],
   selectedItem: null,
 
   createItem: async (item: Omit<ItemType, "id">) => {
     try {
-      //   const response = await fetch("http://localhost:5000/items", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify(item),
-      //   });
-      //   const data = await response.json();
-      //   if (!response.ok) {
-      //     throw new Error("Failed to create item");
-      //   }
-      //   if (data.status === "success") {
-      const newItem: ItemType = { id: Date.now().toString(), ...item };
+      const response = await fetch(`${API_BASE_URL}/items`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(item),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to create item");
+      }
+      const newItem = await response.json();
       set((state) => ({ items: [...state.items, newItem] }));
-      //   } else {
-      // throw new Error("Failed to create item");
-      //   }
     } catch (error) {
       console.error("Failed to create item:", error);
     }
   },
   deleteItem: async (id: string) => {
     try {
-      //   await fetch(`http://localhost:5000/items/${id}`, {
-      //     method: "DELETE",
-      //   });
-      await sleep(1000);
+      const response = await fetch(`${API_BASE_URL}/items/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete item");
+      }
+      await response.json();
+      await sleep(SLEEPDURATION);
       set((state) => ({ items: state.items.filter((item) => item.id !== id) }));
     } catch (error) {
       console.error("Failed to delete item:", error);
@@ -53,17 +54,21 @@ const useItemsStore = create<Store>()((set) => ({
   },
   updateItem: async (updatedItem: ItemType) => {
     try {
-      //   await fetch(`http://localhost:5000/items/${updatedItem.id}`, {
-      //     method: "PUT",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify(updatedItem),
-      //   });
-      await sleep(1000);
+      const response = await fetch(`${API_BASE_URL}/items/${updatedItem.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedItem),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update item");
+      }
+      const newItem = await response.json();
+      await sleep(SLEEPDURATION);
       set((state) => ({
         items: state.items.map((item) =>
-          item.id === updatedItem.id ? updatedItem : item
+          item.id === updatedItem.id ? newItem : item
         ),
       }));
     } catch (error) {
@@ -72,9 +77,13 @@ const useItemsStore = create<Store>()((set) => ({
   },
   fetchItems: async () => {
     try {
-      //   const response = await fetch("http://localhost:5000/items");
-      //   const items = await response.json();
-      const items: ItemType[] = [];
+      const response = await fetch(`${API_BASE_URL}/items`);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch items");
+      }
+      const items = await response.json();
+      await sleep(SLEEPDURATION);
       set({ items });
     } catch (error) {
       console.error("Failed to fetch items:", error);

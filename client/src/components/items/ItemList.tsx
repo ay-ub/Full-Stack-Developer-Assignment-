@@ -36,9 +36,12 @@ function ItemList() {
   });
 
   const sensors = useSensors(pointerSensor);
-
+  const fetchItems = useItemsStore((state) => state.fetchItems);
   useEffect(() => {
     setItems(itemsData);
+    if (itemsData.length === 0) {
+      fetchItems();
+    }
   }, [itemsData]);
 
   return (
