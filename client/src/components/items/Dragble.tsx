@@ -1,9 +1,9 @@
 import type { ItemType } from "@/types/item";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import Item from "./item";
+import Item from "./Item";
 
-function DragbleItem({ item }: { item: ItemType }) {
+function DragbleItem({ itemData }: { itemData: ItemType }) {
   const {
     attributes,
     listeners,
@@ -11,11 +11,11 @@ function DragbleItem({ item }: { item: ItemType }) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: item.id });
+  } = useSortable({ id: itemData.id });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    zIndex: isDragging ? 9999 : "auto",
+    zIndex: isDragging ? 5 : "auto",
   };
   return (
     <div
@@ -25,7 +25,11 @@ function DragbleItem({ item }: { item: ItemType }) {
       {...listeners}
       className="cursor-grab"
     >
-      <Item key={item.id} item={item} className="md:max-w-md select-none" />
+      <Item
+        key={itemData.id}
+        item={itemData}
+        className="md:max-w-md select-none"
+      />
     </div>
   );
 }

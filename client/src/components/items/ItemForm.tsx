@@ -7,6 +7,9 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { DatePicker } from "../DatePicker";
 import { useState } from "react";
+import type { ItemType } from "@/types/item";
+import useItemsStore from "@/store/itemsStore";
+import Notify from "@/lib/Toast";
 
 type Inputs = {
   name: string;
@@ -14,24 +17,52 @@ type Inputs = {
   price: number;
 };
 
-function ItemForm() {
+function ItemForm({ item }: { item?: ItemType }) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
-      name: "",
-      description: "",
-      price: 100,
+      name: item?.name || "",
+      description: item?.description || "",
+      price: item?.price || 100,
     },
   });
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
-  const [date, setDate] = useState<Date>();
+  const updateItem = useItemsStore((state) => state.updateItem);
+  const createItem = useItemsStore((state) => state.createItem);
+
+  const handleSubmitForm: SubmitHandler<Inputs> = (data) => {
+    if (!date) {
+      alert("Please select a date");
+      return;
+    }
+    const expiryDate = date.toISOString();
+
+    if (item) {
+      Notify({
+        fn: updateItem({ ...item, ...data, expiryDate }),
+        successMessage: "Item has been updated",
+        errorMessage: "error updating item",
+      });
+    } else {
+      Notify({
+        fn: createItem({ ...data, expiryDate }),
+        successMessage: "Item has been created",
+        errorMessage: "error creating item",
+      });
+    }
+
+    document.getElementById("cancleBtn")?.click();
+  };
+
+  const [date, setDate] = useState<Date | undefined>(
+    item?.expiryDate ? new Date(item.expiryDate) : undefined
+  );
 
   return (
-    <form id="item-form" onSubmit={handleSubmit(onSubmit)}>
-      <SectionTitle title="Create New Item" />
+    <form id="item-form" onSubmit={handleSubmit(handleSubmitForm)}>
+      <SectionTitle title={item ? "Update Item" : "Create New Item"} />
       <div className="my-4 space-y-3">
         <div className="grid w-full items-center gap-3">
           <Label className="flex justify-between">
@@ -55,8 +86,9 @@ function ItemForm() {
                 message: "Name cannot exceed 20 characters",
               },
               pattern: {
-                value: /^[A-Za-z\s]+$/i,
-                message: "Alphabetical characters only",
+                value: /^[\u0600-\u06FFA-Za-z0-9\s,.]+$/,
+                message:
+                  "Only letters, numbers, spaces, commas, and periods are allowed",
               },
             })}
             type="text"
@@ -85,7 +117,7 @@ function ItemForm() {
                 message: "Description cannot exceed 100 characters",
               },
               pattern: {
-                value: /^[A-Za-z\s]+$/i,
+                value: /^[\u0600-\u06FFA-Za-z0-9\s,.]+$/,
                 message: "Alphabetical characters and spaces only",
               },
             })}
@@ -134,12 +166,16 @@ function ItemForm() {
       </div>
       <div className="flex items-center gap-4 my-2">
         <DialogClose asChild>
-          <Button variant={"destructive"} className="flex-1">
+          <Button variant={"destructive"} className="flex-1" id="cancleBtn">
             Cancel
           </Button>
         </DialogClose>
-        <Button type="submit" className="flex-1">
-          Create Item
+        <Button
+          type="submit"
+          className="flex-1"
+          disabled={!!Object.keys(errors).length}
+        >
+          {item ? "Update Item" : "Create Item"}
         </Button>
       </div>
     </form>

@@ -1,3 +1,4 @@
+import { Toaster } from "sonner";
 import ItemsSection from "./components/items/ItemsSection";
 import VideoSection from "./components/videos/VideoSection";
 import DashboardLayout from "./layouts/dashboard";
@@ -9,6 +10,7 @@ function App() {
         <ItemsSection />
         <VideoSection />
       </DashboardLayout>
+      <Toaster />
     </ThemeProvider>
   );
 }

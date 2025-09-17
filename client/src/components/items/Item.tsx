@@ -12,14 +12,24 @@ import { Button } from "../ui/button";
 import { Edit, Trash } from "lucide-react";
 import PopUp from "../PopUp";
 import { DialogClose } from "../ui/dialog";
+import ItemForm from "./ItemForm";
+import useItemsStore from "@/store/itemsStore";
+import Notify from "@/lib/Toast";
 
 function Item({
   item,
   ...props
 }: { item: ItemType } & React.HTMLAttributes<HTMLDivElement>) {
-  const handleRemoveItem = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const removeItem = useItemsStore((state) => state.deleteItem);
+
+  const handleRemoveItem = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Remove item", item.id);
+    Notify({
+      fn: removeItem(item.id),
+      successMessage: "Item has been deleted",
+      errorMessage: "error deleting item",
+    });
+
     document.getElementById("cancleDeleteBtn")?.click();
   };
 
@@ -37,22 +47,26 @@ function Item({
                 </Button>
               }
             >
-              <form>
+              <form onSubmit={handleRemoveItem}>
                 <h3>Are you sure you want to delete {item.name}?</h3>
                 <p>This action cannot be undone.</p>
                 <div className="mt-4 flex justify-end gap-2">
                   <DialogClose asChild>
                     <Button id="cancleDeleteBtn">Cancel</Button>
                   </DialogClose>
-                  <Button variant="destructive" onClick={handleRemoveItem}>
-                    Delete
-                  </Button>
+                  <Button variant="destructive">Delete</Button>
                 </div>
               </form>
             </PopUp>
-            <Button variant="outline" size="icon">
-              <Edit />
-            </Button>
+            <PopUp
+              trigger={
+                <Button variant="outline" size="icon">
+                  <Edit />
+                </Button>
+              }
+            >
+              <ItemForm item={item} />
+            </PopUp>
           </div>
         </CardAction>
       </CardHeader>

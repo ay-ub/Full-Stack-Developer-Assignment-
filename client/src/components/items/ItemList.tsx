@@ -1,5 +1,4 @@
-import itemsData from "@/constants/items";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DndContext,
   closestCenter,
@@ -14,7 +13,10 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable";
 import DragbleItem from "./Dragble";
+import useItemsStore from "@/store/itemsStore";
 function ItemList() {
+  const itemsData = useItemsStore((state) => state.items);
+
   const [items, setItems] = useState(itemsData);
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -34,6 +36,11 @@ function ItemList() {
   });
 
   const sensors = useSensors(pointerSensor);
+
+  useEffect(() => {
+    setItems(itemsData);
+  }, [itemsData]);
+
   return (
     <DndContext
       collisionDetection={closestCenter}
@@ -46,10 +53,10 @@ function ItemList() {
       >
         <div
           id="item-list"
-          className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 overflow-hidden"
+          className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 overflow-hidden items-stretch"
         >
           {items.map((item) => (
-            <DragbleItem key={item.id} item={item} />
+            <DragbleItem key={item.id} itemData={item} />
           ))}
         </div>
       </SortableContext>
