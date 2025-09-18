@@ -1,69 +1,94 @@
-# React + TypeScript + Vite
+# Full-Stack Developer Assignment
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Objective
 
-Currently, two official plugins are available:
+This project is a full-stack web application built to manage items and upload videos. It demonstrates proficiency with **React**, **FastAPI**, **SQLAlchemy**, and modern front-end libraries such as **Tailwind CSS**, **shadcn/ui**, **dnd-kit**, **Zustand**, and **React Hook Form**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Technology Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Front-End
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Framework:** React with Vite + TypeScript
+- **Styling:** Tailwind CSS
+- **UI Components:** shadcn/ui
+- **Drag & Drop:** dnd-kit
+- **State Management:** Zustand
+- **Form Handling:** React Hook Form
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### Back-End
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Framework:** Python with FastAPI
+- **Database:** SQLite (using SQLAlchemy ORM)
+
+---
+
+## Features
+
+### 1. Dashboard Layout
+
+- Clean single-page dashboard layout
+- Fixed side panel for navigation (placeholder links)
+- Main content area for forms and item list
+
+### 2. Item Management
+
+- Create new items using a form:
+  - Text input for item name
+  - Number input for
+  - Date picker
+- Display items in a list
+- Edit and delete functionality:
+  - Edit populates the form with item data
+  - Delete removes the item from the list and database
+
+### 3. Video Upload
+
+- Upload video files from the dashboard
+- Backend saves uploaded videos to `./uploads`
+- Supports simple video processing or streaming
+
+### 4. Drag & Drop Reordering
+
+- Drag and drop items using **dnd-kit**
+- Items can be reordered dynamically
+
+---
+
+## Installation
+
+### Frontend
+
+```bash
+cd client
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Backend
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+cd server
+```
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Create virtual environment
+
+```bash
+python -m venv venv
+```
+
+## Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+## Run FastAPI server
+
+```bash
+uvicorn app.main:app --reload
 ```
