@@ -56,6 +56,50 @@ This project is a full-stack web application built to manage items and upload vi
 
 ---
 
+## Environment Setup
+
+Before running the application, you need to set up environment variables for both the frontend and backend.
+
+### Frontend Environment Variables
+
+1. Navigate to the client directory:
+
+   ```bash
+   cd client
+   ```
+
+2. Copy the example environment file:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Update the `.env` file with your configuration:
+   ```
+   VITE_API_BASE_URL=http://127.0.0.1:8000
+   ```
+
+### Backend Environment Variables
+
+1. Navigate to the server directory:
+
+   ```bash
+   cd server
+   ```
+
+2. Copy the example environment file:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Update the `.env` file with your configuration:
+   ```
+   DATABASE_URL=sqlite:///./app.db
+   ```
+
+---
+
 ## Installation
 
 ### Frontend
